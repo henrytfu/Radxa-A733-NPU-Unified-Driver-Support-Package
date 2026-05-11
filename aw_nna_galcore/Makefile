@@ -14,17 +14,17 @@ EXTRA_CFLAGS += \
 	-DgcdENABLE_VG=0 -DgcdFPGA_BUILD=0 -DgcdENABLE_DRM=0 -DgcdENABLE_TRUST_APPLICATION=1
 
 EXTRA_CFLAGS += \
-	-I$(srctree)/$(src)/hal/inc/\
-	-I$(srctree)/$(src)/hal/inc/shared/\
-	-I$(srctree)/$(src)/hal/ \
-	-I$(srctree)/$(src)/hal/arch/ \
-	-I$(srctree)/$(src)/os/ \
-	-I$(srctree)/$(src)/os/allocator/default/ \
-	-I$(srctree)/$(src)/ta/security_v1/ \
-	-I$(srctree)/$(src)/os/platform/allwinner/
+	-I$(M)/hal/inc/\
+	-I$(M)/hal/inc/shared/\
+	-I$(M)/hal/ \
+	-I$(M)/hal/arch/ \
+	-I$(M)/os/ \
+	-I$(M)/os/allocator/default/ \
+	-I$(M)/ta/security_v1/ \
+	-I$(M)/os/platform/allwinner/
 
 
-obj-$(CONFIG_AW_NNA_GALCORE) += galcore.o
+obj-m += galcore.o
 galcore-y += \
 	os/gc_hal_kernel_device.o os/gc_hal_kernel_linux.o \
 	os/gc_hal_kernel_math.o os/gc_hal_kernel_os.o \
