@@ -7,7 +7,7 @@ git restore ./
 git clean -fdx ./
 
 # Apply the kernel 6.6 patch
-git apply --check galcore_6.6_kernel_api_drift.patch
+patch -p1 < galcore_6.6_kernel_api_drift.patch
 
 # We are ready to start building the Debian package
 kdir="/lib/modules/$(uname -r)/build"
