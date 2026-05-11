@@ -11,6 +11,6 @@ git apply --check galcore_6.6_kernel_api_drift.patch
 
 # We are ready to start building the Debian package
 kdir="/lib/modules/$(uname -r)/build"
-srcdir = "$(pwd)/aw_nna_galcore"
+srcdir="$(pwd)/aw_nna_galcore"
 
 make -C "$kdir" M="$srcdir" modules
