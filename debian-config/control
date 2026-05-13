@@ -1,5 +1,5 @@
 Package: galcore-unified-driver
-Version: 1.0-$(date +%Y%m%d)
+Version: 1.0.0-1
 Section: kernel
 Priority: optional
 Architecture: arm64
