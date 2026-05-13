@@ -32,5 +32,7 @@ chmod 755 "pkg/DEBIAN/postinst"
 # 4. Generate the Control file
 cp "debian-config/control" "pkg/DEBIAN/control"
 
+sudo chown -R root:root pkg/
+
 # 5. Build the final .deb
 dpkg-deb --build "pkg" "galcore-unified-driver-a733.deb"
