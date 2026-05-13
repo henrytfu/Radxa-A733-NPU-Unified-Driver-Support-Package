@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Make sure the repository is clean before we start. We don't want to mess with any uncommitted changes.
 git restore ./
-git clean -fdx ./
+sudo git clean -fdx ./
 
 # Apply the kernel 6.6 patch
 patch -p1 < galcore_6.6_kernel_api_drift.patch
