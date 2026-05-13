@@ -1,0 +1,5 @@
+# Automate the handover from vipcore to galcore on boot
+SUBSYSTEM=="platform", DRIVERS=="vipcore", ACTION=="add", RUN+="/bin/sh -c 'echo $name > /sys/bus/platform/drivers/vipcore/unbind; modprobe galcore'"
+
+# Set permissions for the resulting device node
+KERNEL=="galcore", MODE="0666", GROUP="video"

@@ -13,6 +13,6 @@ patch -p1 < galcore_6.6_kernel_api_drift.patch
 kdir="/lib/modules/$(uname -r)/build"
 srcdir="$(pwd)/aw_nna_galcore"
 
-make -C "$kdir" M="$srcdir" modules_install
+make -C "$kdir" M="$srcdir" modules
 
 mkdir -p pkg/

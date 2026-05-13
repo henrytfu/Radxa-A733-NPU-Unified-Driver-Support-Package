@@ -1,0 +1,8 @@
+Package: galcore-unified-driver
+Version: 1.0-$(date +%Y%m%d)
+Section: kernel
+Priority: optional
+Architecture: arm64
+Maintainer: Henry
+Description: Verisilicon Unified NPU Driver (GALCORE)
+ Replaces built-in VIP-Lite driver for TIM-VX and ONNX Runtime compatibility.
