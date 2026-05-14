@@ -19,12 +19,14 @@ make -C "$kdir" M="$srcdir" modules
 mkdir -p "pkg/lib/modules/$(uname -r)/extra"
 mkdir -p "pkg/etc/udev/rules.d"
 mkdir -p "pkg/etc/modprobe.d"
+mkdir -p "pkg/etc/systemd/system/"
 mkdir -p "pkg/DEBIAN"
 
 # 3. COPY existing config files instead of echoing
 cp "$srcdir/galcore.ko" "pkg/lib/modules/$(uname -r)/extra/"
 cp "debian-config/99-galcore.rules" "pkg/etc/udev/rules.d/"
 cp "debian-config/galcore.conf" "pkg/etc/modprobe.d/"
+cp "debian-config/npu-prepare.service" "pkg/etc/systemd/system/"
 cp "debian-config/postinst" "pkg/DEBIAN/"
 
 # Ensure the postinst is executable (Mandatory for dpkg)

@@ -1,0 +1,18 @@
+[Unit]
+Description=Prepare NPU Hardware (VIP-Lite vipcore driver to Unified galcore driver Handover)
+Before=multi-user.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/sbin/modprobe vipcore
+# Give the hardware a second to settle
+ExecStartPre=/bin/sleep 1
+# Force unbind and remove
+ExecStart=/bin/sh -c 'for dev in /sys/bus/platform/drivers/vipcore/*.npu; do [ -e "$dev" ] && echo $(basename "$dev") > /sys/bus/platform/drivers/vipcore/unbind; done'
+ExecStartPost=/sbin/rmmod vipcore
+ExecStartPost=/sbin/modprobe galcore
+
+[Install]
+WantedBy=multi-user.target

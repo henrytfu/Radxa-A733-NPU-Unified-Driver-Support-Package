@@ -19,6 +19,10 @@ rmmod vipcore || true
 depmod -a
 modprobe galcore
 
+systemctl daemon-reload
+systemctl enable npu-prepare.service
+systemctl start npu-prepare.service
+
 # 5. Update initramfs (The "Nuclear" Option)
 # This ensures vipcore is gone from the very first stage of boot
 if command -v update-initramfs >/dev/null; then
