@@ -3,25 +3,21 @@ set -e
 
 echo "Configuring NPU for Unified Driver..."
 
-# 1. Immediate handover
-if lsmod | grep -q "vipcore"; then
-    echo "Stopping existing vipcore driver..."
-    # Unbind hardware
-    for dev in /sys/bus/platform/drivers/vipcore/*.npu; do
-        [ -e "$dev" ] && echo $(basename "$dev") > /sys/bus/platform/drivers/vipcore/unbind || true
-    done
-    # Remove module
-    rmmod vipcore || true
-fi
+# 1. We need to make sure vipcore is loaded because it's needed to power on the NPU
+# We then immediately unbind and unload it to allow galcore to take over
+# galcore appears to not be able to power on the NPU by itself
+modprobe vipcore || true
+echo "Stopping existing vipcore driver..."
+# Unbind hardware
+for dev in /sys/bus/platform/drivers/vipcore/*.npu; do
+    [ -e "$dev" ] && echo $(basename "$dev") > /sys/bus/platform/drivers/vipcore/unbind || true
+done
+# Remove module
+rmmod vipcore || true
 
 # 2. Setup module dependencies
 depmod -a
-
-# 3. Load the new driver immediately
-if ! lsmod | grep -q "galcore"; then
-    echo "Loading galcore..."
-    modprobe galcore
-fi
+modprobe galcore
 
 # 5. Update initramfs (The "Nuclear" Option)
 # This ensures vipcore is gone from the very first stage of boot
