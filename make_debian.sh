@@ -24,6 +24,8 @@ mkdir -p "pkg/DEBIAN"
 # 3. COPY existing config files instead of echoing
 cp "$srcdir/galcore.ko" "pkg/lib/modules/$(uname -r)/extra/"
 cp "debian-config/99-galcore.rules" "pkg/etc/udev/rules.d/"
+cp "debian-config/galcore.conf" "pkg/etc/modprobe.d/"
+cp "debian-config/blacklist-vipcore.conf" "pkg/etc/modprobe.d
 cp "debian-config/postinst" "pkg/DEBIAN/"
 
 # Ensure the postinst is executable (Mandatory for dpkg)

@@ -1,23 +1,34 @@
 #!/bin/sh
 set -e
 
-# 1. Identify the NPU hardware address currently held by vipcore
-# Usually looks like 'fb000000.npu'
-NPU_ADDR=$(ls /sys/bus/platform/drivers/vipcore/ | grep -E '^[0-9a-f]+\.npu$|npu' | head -n 1)
+echo "Configuring NPU for Unified Driver..."
 
-if [ -n "$NPU_ADDR" ]; then
-    echo "NPU hardware found at $NPU_ADDR. Unbinding from VIP-Lite (vipcore)..."
-    echo "$NPU_ADDR" > /sys/bus/platform/drivers/vipcore/unbind || true
-    echo on | sudo tee /sys/devices/platform/soc@3000000/3600000.npu/power/control
+# 1. Immediate handover
+if lsmod | grep -q "vipcore"; then
+    echo "Stopping existing vipcore driver..."
+    # Unbind hardware
+    for dev in /sys/bus/platform/drivers/vipcore/*.npu; do
+        [ -e "$dev" ] && echo $(basename "$dev") > /sys/bus/platform/drivers/vipcore/unbind || true
+    done
+    # Remove module
+    rmmod vipcore || true
 fi
 
-# 2. Register the new module
-echo "Updating module dependencies..."
+# 2. Setup module dependencies
 depmod -a
 
-# 3. Attempt to load the Unified driver
-echo "Loading Unified Galcore driver..."
-modprobe galcore || true
+# 3. Load the new driver immediately
+if ! lsmod | grep -q "galcore"; then
+    echo "Loading galcore..."
+    modprobe galcore
+fi
+
+# 5. Update initramfs (The "Nuclear" Option)
+# This ensures vipcore is gone from the very first stage of boot
+if command -v update-initramfs >/dev/null; then
+    echo "Updating initramfs..."
+    update-initramfs -u
+fi
 
 # 4. Success check
 if [ -e /dev/galcore ]; then
