@@ -3,6 +3,14 @@ set -e
 
 echo "Configuring NPU for Unified Driver..."
 
+# Disable static loading of galcore to prevent race conditions during boot
+# For some reason, the 0.6.2 community armbian build (which this is designed for) has galcore hardcoded into /etc/modules-load.d/modules.conf
+# This causes it to be loaded before vipcore is unbound. This causes it to load before we can do it our way with the systemd script, which of course fails
+if [ -f /etc/modules-load.d/modules.conf ]; then
+    echo "Disabling static galcore load in modules.conf..."
+    sed -i 's/^galcore/# galcore/g' /etc/modules-load.d/modules.conf
+fi
+
 # 1. We need to make sure vipcore is loaded because it's needed to power on the NPU
 # We then immediately unbind and unload it to allow galcore to take over
 # galcore appears to not be able to power on the NPU by itself
